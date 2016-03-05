@@ -2,83 +2,85 @@ Mustache for Flask
 
 e.g.
 
+```python
+from flask import Flask
+from pystache import TemplateSpec
+from flask.ext.mustache import FlaskMustache
 
-    from flask import Flask
-    from pystache import TemplateSpec
-    from flask.ext.mustache import FlaskMustache
-
-    app = Flask(__name__)
-    mustache = FlaskMustache(app)
-
-
-    @mustache.view_route('/example/<stuff>')
-    class Example(TemplateSpec):
-
-        """
-        An example view
-        """
-
-        template = "{{hello}}"
-
-        def hello(self):
-            return "hello"
+app = Flask(__name__)
+mustache = FlaskMustache(app)
 
 
-    @mustache.view_route('/example/<stuff>')
-    class ParamExample(TemplateSpec):
+@mustache.view_route('/example/<stuff>')
+class Example(TemplateSpec):
 
-        """
-        An example view
-        """
+    """
+    An example view
+    """
 
-        template = "{{hello}}{{stuff}}"
+    template = "{{hello}}"
 
-        def route(self, stuff):
-            self.stuff = stuff
-
-        def hello(self):
-            return "hello"
+    def hello(self):
+        return "hello"
 
 
-    @mustache.view_route('/example/<dynamic>')
-    class DynamicExample(TemplateSpec):
+@mustache.view_route('/example/<stuff>')
+class ParamExample(TemplateSpec):
 
-        """
-        An example view
-        """
+    """
+    An example view
+    """
 
-        template = "{{hello}}{{dynamic}}"
+    template = "{{hello}}{{stuff}}"
 
-        def route(self, **kwargs):
-            self.route_args = kwargs
+    def route(self, stuff):
+        self.stuff = stuff
 
-        def hello(self):
-            return "hello"
-
-        def dynamic(self):
-            return self.route_args.get('dynamic', '')
+    def hello(self):
+        return "hello"
 
 
-    @mustache.view_error(404)
-    class Example404(TemplateSpec):
+@mustache.view_route('/example/<dynamic>')
+class DynamicExample(TemplateSpec):
 
-        """
-        An example 404 view
-        """
+    """
+    An example view
+    """
 
-        template = "{{hello}}"
+    template = "{{hello}}{{dynamic}}"
 
-        def hello(self):
-            return "hello 404"
+    def route(self, **kwargs):
+        self.route_args = kwargs
 
-    @mustache.view_error(NotImplementedError, 501)
-    class ExampleCustomCode(TemplateSpec):
+    def hello(self):
+        return "hello"
 
-        """
-        An example Exception view that emits a (user specified) 501 code
-        """
+    def dynamic(self):
+        return self.route_args.get('dynamic', '')
 
-        template = "{{hello}}"
 
-        def hello(self):
-            return "hello custom code"
+@mustache.view_error(404)
+class Example404(TemplateSpec):
+
+    """
+    An example 404 view
+    """
+
+    template = "{{hello}}"
+
+    def hello(self):
+        return "hello 404"
+
+@mustache.view_error(NotImplementedError, 501)
+class ExampleCustomCode(TemplateSpec):
+
+    """
+    An example Exception view that emits a (user specified) 501 code
+    """
+
+    template = "{{hello}}"
+
+    def hello(self):
+        return "hello custom code"
+```
+
